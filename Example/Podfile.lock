@@ -1,0 +1,25 @@
+PODS:
+  - FBSnapshotTestCase (1.1)
+  - KIF (3.0.7):
+    - KIF/XCTest
+  - KIF-Kiwi (0.1.0):
+    - KIF
+    - Kiwi
+  - KIF/XCTest (3.0.7)
+  - Kiwi (2.3.0)
+
+DEPENDENCIES:
+  - FBSnapshotTestCase
+  - KIF-Kiwi (from `../`)
+
+EXTERNAL SOURCES:
+  KIF-Kiwi:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FBSnapshotTestCase: 9053afee1d66b4c7c313fcb0ae582a5e47bea9d0
+  KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
+  KIF-Kiwi: 36d2a75dd3fd1b3db2b18d5672fe29220010c0e7
+  Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
+
+COCOAPODS: 0.33.1
