@@ -34,7 +34,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
-  s.resources = 'Pod/Assets/*.png'
   s.dependency 'Kiwi'
   s.dependency 'KIF'
   s.framework = 'XCTest'
