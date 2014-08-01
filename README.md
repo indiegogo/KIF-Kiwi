@@ -34,6 +34,7 @@ git clone https://github.com/IndieGoGo/KIF-Kiwi.git
 open KIF-Kiwi/Example/KIF-Kiwi.workspace
 ```
 press ```⌘-U``` in Xcode or select Product->Test from menu
+
 or run example tests from the command line:
 ```
 cd KIF-Kiwi/Example/
@@ -42,6 +43,17 @@ xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimu
 or using [xctool](https://github.com/facebook/xctool):
 ```
 xctool test
+```
+Test Output will show human readable test description:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2014-08-01 02:28:15.661 KIF-Kiwi[14407:70b] + 'Testable, should have working button' [PASSED]
+━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✓ -[SampleAppSpec Testable_ShouldHaveWorkingButton] (761 ms)
+    1 passed, 0 failed, 0 errored, 1 total (761 ms)
+
+** TEST SUCCEEDED: 1 passed, 0 failed, 0 errored, 1 total ** (13862 ms)
+
 ```
 
 ## Requirements
