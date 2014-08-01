@@ -52,9 +52,7 @@ static NSString * const StubValueKey = @"StubValueKey";
                                      @"receive:andReturn:withCountAtLeast:",
                                      @"receive:andReturn:withCountAtMost:",
                                      @"receiveMessagePattern:countType:count:",
-                                     @"receiveMessagePattern:andReturn:countType:count:",
-                                     @"receiveUnspecifiedCountOfMessagePattern:",
-                                     @"receiveUnspecifiedCountOfMessagePattern:andReturn:"];
+                                     @"receiveMessagePattern:andReturn:countType:count:"];
 }
 
 #pragma mark - Matching
@@ -91,7 +89,7 @@ static NSString * const StubValueKey = @"StubValueKey";
 
 - (void)receive:(SEL)aSelector {
     KWMessagePattern *messagePattern = [KWMessagePattern messagePatternWithSelector:aSelector];
-    [self receiveUnspecifiedCountOfMessagePattern:messagePattern];
+    [self receiveMessagePattern:messagePattern countType:KWCountTypeExact count:1];
 }
 
 - (void)receive:(SEL)aSelector withCount:(NSUInteger)aCount {
@@ -111,7 +109,7 @@ static NSString * const StubValueKey = @"StubValueKey";
 
 - (void)receive:(SEL)aSelector andReturn:(id)aValue {
     KWMessagePattern *messagePattern = [KWMessagePattern messagePatternWithSelector:aSelector];
-    [self receiveUnspecifiedCountOfMessagePattern:messagePattern andReturn:aValue];
+    [self receiveMessagePattern:messagePattern andReturn:aValue countType:KWCountTypeExact count:1];
 }
 
 - (void)receive:(SEL)aSelector andReturn:(id)aValue withCount:(NSUInteger)aCount {
@@ -127,22 +125,6 @@ static NSString * const StubValueKey = @"StubValueKey";
 - (void)receive:(SEL)aSelector andReturn:(id)aValue withCountAtMost:(NSUInteger)aCount {
     KWMessagePattern *messagePattern = [KWMessagePattern messagePatternWithSelector:aSelector];
     [self receiveMessagePattern:messagePattern andReturn:aValue countType:KWCountTypeAtMost count:aCount];
-}
-
-- (void)receiveUnspecifiedCountOfMessagePattern:(KWMessagePattern *)messagePattern {
-    if (self.willEvaluateAgainstNegativeExpectation) {
-        [self receiveMessagePattern:messagePattern countType:KWCountTypeAtLeast count:1];
-    } else {
-        [self receiveMessagePattern:messagePattern countType:KWCountTypeExact count:1];
-    }
-}
-
-- (void)receiveUnspecifiedCountOfMessagePattern:(KWMessagePattern *)messagePattern andReturn:(id)aValue {
-    if (self.willEvaluateAgainstNegativeExpectation) {
-        [self receiveMessagePattern:messagePattern andReturn:aValue countType:KWCountTypeAtLeast count:1];
-    } else {
-        [self receiveMessagePattern:messagePattern andReturn:aValue countType:KWCountTypeExact count:1];
-    }
 }
 
 - (void)receiveMessagePattern:(KWMessagePattern *)aMessagePattern countType:(KWCountType)aCountType count:(NSUInteger)aCount {
@@ -211,7 +193,7 @@ static NSString * const StubValueKey = @"StubValueKey";
     va_list argumentList;
     va_start(argumentList, firstArgument);
     KWMessagePattern *messagePattern = [KWMessagePattern messagePatternWithSelector:aSelector firstArgumentFilter:firstArgument argumentList:argumentList];
-    [(id)self receiveUnspecifiedCountOfMessagePattern:messagePattern];
+    [(id)self receiveMessagePattern:messagePattern countType:KWCountTypeExact count:1];
 }
 
 - (void)receive:(SEL)aSelector withCount:(NSUInteger)aCount arguments:(id)firstArgument, ... {
@@ -239,7 +221,7 @@ static NSString * const StubValueKey = @"StubValueKey";
     va_list argumentList;
     va_start(argumentList, firstArgument);
     KWMessagePattern *messagePattern = [KWMessagePattern messagePatternWithSelector:aSelector firstArgumentFilter:firstArgument argumentList:argumentList];
-    [(id)self receiveUnspecifiedCountOfMessagePattern:messagePattern andReturn:aValue];
+    [(id)self receiveMessagePattern:messagePattern andReturn:aValue countType:KWCountTypeExact count:1];
 }
 
 - (void)receive:(SEL)aSelector andReturn:(id)aValue withCount:(NSUInteger)aCount arguments:(id)firstArgument, ... {

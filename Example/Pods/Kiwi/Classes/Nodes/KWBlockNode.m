@@ -8,15 +8,13 @@
 
 @implementation KWBlockNode
 
-@synthesize description = _description;
-
 #pragma mark - Initializing
 
 - (id)initWithCallSite:(KWCallSite *)aCallSite description:(NSString *)aDescription block:(void (^)(void))block {
     self = [super init];
     if (self) {
         _callSite = aCallSite;
-        _description = [aDescription copy];
+        _description = aDescription;
         _block = [block copy];
     }
 

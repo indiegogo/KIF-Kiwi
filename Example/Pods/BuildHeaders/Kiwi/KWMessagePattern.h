@@ -1,1 +1,1 @@
-../../Kiwi/Classes/Core/KWMessagePattern.h
+../../Kiwi/NonARC/KWMessagePattern.h

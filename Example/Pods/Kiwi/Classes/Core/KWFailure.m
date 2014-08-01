@@ -5,6 +5,7 @@
 //
 
 #import "KWFailure.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "KWCallSite.h"
 
 @implementation KWFailure
@@ -25,7 +26,6 @@
     va_list argumentList;
     va_start(argumentList, format);
     NSString *aMessage = [[NSString alloc] initWithFormat:format arguments:argumentList];
-    va_end(argumentList);
     return [self initWithCallSite:aCallSite message:aMessage];
 }
 
@@ -37,8 +37,21 @@
     va_list argumentList;
     va_start(argumentList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argumentList];
-    va_end(argumentList);
     return [self failureWithCallSite:aCallSite message:message];
+}
+
+#pragma mark - Getting Exception Representations
+
+- (NSException *)exceptionValue {
+    NSDictionary *userInfo = nil;
+    if (self.callSite) {
+        NSNumber *lineNumber = @(self.callSite.lineNumber);
+        userInfo = @{
+            @"SenTestFilenameKey": self.callSite.filename,
+            @"SenTestLineNumberKey": lineNumber
+        };
+    }
+    return [NSException exceptionWithName:@"KWFailureException" reason:self.message userInfo:userInfo];
 }
 
 @end

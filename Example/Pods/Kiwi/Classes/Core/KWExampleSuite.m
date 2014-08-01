@@ -59,7 +59,7 @@
         NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:[KWEncodingForDefaultMethod() UTF8String]];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
         [invocations addObject:invocation];
-        invocation.kw_example = exampleGroup;
+        [invocation kw_setExample:exampleGroup];
     }
     
     return invocations;
@@ -69,13 +69,13 @@
 
 #pragma mark -
 
-// because XCTest will modify the invocation target, we'll have to store
+// because SenTest will modify the invocation target, we'll have to store 
 // another reference to the example group so we can retrieve it later
 
 @implementation NSInvocation (KWExampleGroup)
 
 - (void)kw_setExample:(KWExample *)exampleGroup {
-    objc_setAssociatedObject(self, kKWINVOCATION_EXAMPLE_GROUP_KEY, exampleGroup, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  objc_setAssociatedObject(self, kKWINVOCATION_EXAMPLE_GROUP_KEY, exampleGroup, OBJC_ASSOCIATION_RETAIN);    
 }
 
 - (KWExample *)kw_example {

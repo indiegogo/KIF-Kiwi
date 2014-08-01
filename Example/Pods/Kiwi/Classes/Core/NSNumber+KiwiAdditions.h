@@ -12,7 +12,6 @@
 
 + (id)numberWithBytes:(const void *)bytes objCType:(const char *)anObjCType;
 + (id)numberWithBoolBytes:(const void *)bytes;
-+ (id)numberWithStdBoolBytes:(const void *)bytes;
 + (id)numberWithCharBytes:(const void *)bytes;
 + (id)numberWithDoubleBytes:(const void *)bytes;
 + (id)numberWithFloatBytes:(const void *)bytes;

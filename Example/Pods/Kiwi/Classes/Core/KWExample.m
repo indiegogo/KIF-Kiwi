@@ -86,8 +86,9 @@
 
 - (id)addMatchVerifierWithExpectationType:(KWExpectationType)anExpectationType callSite:(KWCallSite *)aCallSite {
     if (self.unresolvedVerifier) {
-        KWFailure *failure = [KWFailure failureWithCallSite:self.unresolvedVerifier.callSite format:@"expected subject not to be nil"];
-        [self reportFailure:failure];
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"Trying to add another verifier without specifying a matcher for the previous one."
+                                     userInfo:nil];
     }
     id<KWVerifying> verifier = [KWMatchVerifier matchVerifierWithExpectationType:anExpectationType callSite:aCallSite matcherFactory:self.matcherFactory reporter:self];
     [self addVerifier:verifier];
@@ -275,7 +276,8 @@ KWCallSite *callSiteAtAddressIfNecessary(long address){
 }
 
 KWCallSite *callSiteWithAddress(long address){
-    NSArray *args = @[@"-p", @(getpid()).stringValue, [NSString stringWithFormat:@"%lx", address]];
+    NSArray *args = @[@"-d",
+                      @"-p", @(getpid()).stringValue, [NSString stringWithFormat:@"%lx", address]];
     NSString *callSite = [NSString stringWithShellCommand:@"/usr/bin/atos" arguments:args];
 
     NSString *pattern = @".+\\((.+):([0-9]+)\\)";

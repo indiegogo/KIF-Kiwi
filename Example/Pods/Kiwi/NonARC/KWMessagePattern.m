@@ -54,11 +54,11 @@
 }
 
 + (id)messagePatternWithSelector:(SEL)aSelector argumentFilters:(NSArray *)anArray {
-    return [[self alloc] initWithSelector:aSelector argumentFilters:anArray];
+    return [[[self alloc] initWithSelector:aSelector argumentFilters:anArray] autorelease];
 }
 
 + (id)messagePatternWithSelector:(SEL)aSelector firstArgumentFilter:(id)firstArgumentFilter argumentList:(va_list)argumentList {
-    return [[self alloc] initWithSelector:aSelector firstArgumentFilter:firstArgumentFilter argumentList:argumentList];
+    return [[[self alloc] initWithSelector:aSelector firstArgumentFilter:firstArgumentFilter argumentList:argumentList] autorelease];
 }
 
 + (id)messagePatternFromInvocation:(NSInvocation *)anInvocation {
@@ -74,14 +74,14 @@
 			void* argumentDataBuffer = malloc(KWObjCTypeLength(type));
 			[anInvocation getMessageArgument:argumentDataBuffer atIndex:i];
 			id object = nil;
-			if(*(__unsafe_unretained id*)argumentDataBuffer != [KWAny any] && !KWObjCTypeIsObject(type)) {
+			if(*(id*)argumentDataBuffer != [KWAny any] && !KWObjCTypeIsObject(type)) {
                 NSData *data = [anInvocation messageArgumentDataAtIndex:i];
                 object = [KWValue valueWithBytes:[data bytes] objCType:type];
             } else {
-				object = *(__unsafe_unretained id*)argumentDataBuffer;
+				object = *(id*)argumentDataBuffer;
 
 				if (object != [KWAny any] && KWObjCTypeIsBlock(type)) {
-					object = [object copy]; // Converting NSStackBlock to NSMallocBlock
+					object = [[object copy] autorelease]; // Converting NSStackBlock to NSMallocBlock
 				}
 			}
 			
@@ -91,7 +91,12 @@
         }
     }
 
-    return [self messagePatternWithSelector:[anInvocation selector] argumentFilters:argumentFilters];
+    return [self messagePatternWithSelector:[anInvocation selector] argumentFilters:[argumentFilters autorelease]];
+}
+
+- (void)dealloc {
+    [argumentFilters release];
+    [super dealloc];
 }
 
 #pragma mark - Properties
@@ -111,7 +116,7 @@
 
     for (NSUInteger i = 0; i < numberOfMessageArguments && i < numberOfArgumentFilters; ++i) {
         const char *objCType = [signature messageArgumentTypeAtIndex:i];
-        id __autoreleasing object = nil;
+        id object = nil;
 
         // Extract message argument into object (wrapping values if neccesary)
         if (KWObjCTypeIsObject(objCType) || KWObjCTypeIsClass(objCType)) {
@@ -188,7 +193,7 @@
 }
 
 - (NSString *)selectorAndArgumentFiltersString {
-    NSMutableString *description = [[NSMutableString alloc] init];
+    NSMutableString *description = [[[NSMutableString alloc] init] autorelease];
     NSArray *components = [NSStringFromSelector(self.selector) componentsSeparatedByString:@":"];
     NSUInteger count = [components count] - 1;
 

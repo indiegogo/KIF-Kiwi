@@ -32,7 +32,7 @@
 
 #pragma mark - Getting Descriptions
 
-@property (readonly, copy) NSString *description;
+@property (nonatomic, readonly) NSString *description;
 
 #pragma mark - Managing Nodes
 
