@@ -1,6 +1,6 @@
 # KIF-Kiwi
 
-[![CI Status](http://img.shields.io/travis/Indiegogo Pair/KIF-Kiwi.svg?style=flat)](https://travis-ci.org/Indiegogo Pair/KIF-Kiwi)
+[![CI Status](http://img.shields.io/travis/IndieGoGo/KIF-Kiwi.svg?style=flat)](https://travis-ci.org/IndieGoGo/KIF-Kiwi)
 [![Version](https://img.shields.io/cocoapods/v/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![License](https://img.shields.io/cocoapods/l/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![Platform](https://img.shields.io/cocoapods/p/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
