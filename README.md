@@ -10,7 +10,7 @@ KIF-Kiwi is a bridge between Keep It Functional and Kiwi frameworks, it allows t
 [![Platform](https://img.shields.io/cocoapods/p/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 
 ## Usage
-
+See [TestableSpec.m](https://github.com/IndieGoGo/KIF-Kiwi/blob/master/Example/Tests/TestableSpec.m) example:
 ```objective-c
 #import <KIF-Kiwi.h>
 
@@ -28,7 +28,12 @@ SPEC_BEGIN(MainViewAppSpec)
 SPEC_END
 ```
 
-To run the example project tests, clone the repo, and open xcode workspace in Example directory.
+To run the example project tests, clone the repo, and open xcode workspace in Example directory:
+```bash
+git clone https://github.com/IndieGoGo/KIF-Kiwi.git
+open KIF-Kiwi/Example/KIF-Kiwi.workspace
+```
+press ```⌘-U``` in Xcode or select Product->Test from menu
 
 ## Requirements
 
