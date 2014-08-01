@@ -7,7 +7,7 @@
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the example project tests, clone the repo, and open xcode workspace in Example directory.
 
 ## Requirements
 
@@ -16,13 +16,13 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
-    pod "KIF-Kiwi"
+    pod 'KIF-Kiwi'
 
-## Author
+## Authors
 
-Indiegogo Pair, tech+gogopair@indiegogo.com
+Pair of developers at Indiegogo, tech+gogopair@indiegogo.com
+Paul Zabelin, paul@indiegogo.com
 
 ## License
 
 KIF-Kiwi is available under the MIT license. See the LICENSE file for more info.
-
