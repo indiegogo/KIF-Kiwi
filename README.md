@@ -20,8 +20,8 @@ it, simply add the following line to your Podfile:
 
 ## Authors
 
-Pair of developers at Indiegogo, tech+gogopair@indiegogo.com
-Paul Zabelin, paul@indiegogo.com
+* Pair of developers at Indiegogo, tech+gogopair@indiegogo.com
+* Paul Zabelin, paul@indiegogo.com
 
 ## License
 
