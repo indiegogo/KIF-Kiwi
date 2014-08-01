@@ -7,13 +7,29 @@
 
 ## Usage
 
+```objective-c
+#import <KIF-Kiwi.h>
+
+SPEC_BEGIN(MainViewAppSpec)
+
+	describe(@"Main view", ^{
+		
+		it(@"should have tappable button", ^{
+            [tester tapViewWithAccessibilityLabel:@"Press me"];
+            [tester waitForViewWithAccessibilityLabel:@"Thank you!"];
+		});
+
+	});
+	
+SPEC_END
+```
+
 To run the example project tests, clone the repo, and open xcode workspace in Example directory.
 
 ## Requirements
 
 * Xcode >= 5.1
 * iOS 7
-* KIF and Kiwi will be automatically installed as dependencies
 
 ## Installation
 
