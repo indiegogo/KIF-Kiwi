@@ -8,21 +8,27 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "KIF-Kiwi"
-  s.version          = "0.1.0"
-  s.summary          = "A short description of KIF-Kiwi."
+  s.name             = 'KIF-Kiwi'
+  s.version          = '0.1.0'
+  s.summary          = 'Enable Behaviour Driven Integration Tests based on Kiwi using KIF'
   s.description      = <<-DESC
-                       An optional longer description of KIF-Kiwi
+                       Write Kiwi specs to drive KIF actor thorugh user interface actions
 
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
+                       * capture screenshots for failing tests
+                       * share common setup using spec context
                        DESC
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/KIF-Kiwi"
+  s.homepage         = 'https://github.com/IndieGoGo/KIF-Kiwi'
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = { "Indiegogo Pair" => "tech+gogopair@indiegogo.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/KIF-Kiwi.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = {
+      'Indiegogo' => 'tech+gogopair@indiegogo.com',
+      'Paul Zabelin' => 'paul@indiegogo.com'
+  }
+  s.source           = {
+      :git => 'https://github.com/IndieGoGo/KIF-Kiwi.git',
+      :tag => s.version.to_s
+  }
+  s.social_media_url = 'https://twitter.com/IndieGoGo'
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
@@ -32,8 +38,4 @@ Pod::Spec.new do |s|
   s.dependency 'Kiwi'
   s.dependency 'KIF'
   s.framework = 'XCTest'
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
