@@ -31,13 +31,13 @@ SPEC_END
 To run the example project tests, clone the repo, and open xcode workspace in Example directory:
 ```bash
 git clone https://github.com/IndieGoGo/KIF-Kiwi.git
-open KIF-Kiwi/Example/KIF-Kiwi.workspace
+cd KIF-Kiwi/Example/
+open KIF-Kiwi.workspace
 ```
 press ```⌘-U``` in Xcode or select Product->Test from menu
 
 or run example tests from the command line:
 ```
-cd KIF-Kiwi/Example/
 xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator
 ```
 or using [xctool](https://github.com/facebook/xctool):
