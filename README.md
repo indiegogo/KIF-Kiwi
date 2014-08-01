@@ -11,6 +11,10 @@ To run the example project tests, clone the repo, and open xcode workspace in Ex
 
 ## Requirements
 
+* Xcode >= 5.1
+* iOS 7
+* KIF and Kiwi will be automatically installed as dependencies
+
 ## Installation
 
 KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install
