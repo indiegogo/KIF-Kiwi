@@ -34,6 +34,15 @@ git clone https://github.com/IndieGoGo/KIF-Kiwi.git
 open KIF-Kiwi/Example/KIF-Kiwi.workspace
 ```
 press ```⌘-U``` in Xcode or select Product->Test from menu
+or run example tests from the command line:
+```
+cd KIF-Kiwi/Example/
+xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator
+```
+or using [xctool](https://github.com/facebook/xctool):
+```
+xctool test
+```
 
 ## Requirements
 
