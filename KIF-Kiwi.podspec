@@ -20,9 +20,10 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/IndieGoGo/KIF-Kiwi'
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = {
+  s.authors           = {
       'Indiegogo' => 'tech+gogopair@indiegogo.com',
-      'Paul Zabelin' => 'paul@indiegogo.com'
+      'Paul Zabelin' => 'paul@indiegogo.com',
+      'Irvin Zhan' => 'irvin.zhan@indiegogo.com'
   }
   s.source           = {
       :git => 'https://github.com/IndieGoGo/KIF-Kiwi.git',
