@@ -1,14 +1,12 @@
 PODS:
   - FBSnapshotTestCase (1.1)
-  - KIF-Kiwi (0.2.0):
+  - KIF (3.0.7):
     - KIF/XCTest
-    - Kiwi/XCTest (~> 2.2.4)
+  - KIF-Kiwi (0.2.0):
+    - KIF (~> 3.0.7)
+    - Kiwi (~> 2.3.0)
   - KIF/XCTest (3.0.7)
-  - Kiwi/ARC (2.2.4)
-  - Kiwi/NonARC (2.2.4)
-  - Kiwi/XCTest (2.2.4):
-    - Kiwi/ARC
-    - Kiwi/NonARC
+  - Kiwi (2.3.0)
 
 DEPENDENCIES:
   - FBSnapshotTestCase
@@ -21,7 +19,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 9053afee1d66b4c7c313fcb0ae582a5e47bea9d0
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
-  KIF-Kiwi: 03b3730898cf974f9213110a53deaacb15e99278
-  Kiwi: c73667f2b84cbf36f1a3830267c5a4ae8dcbd8ba
+  KIF-Kiwi: 1d93e06b859854460335a744c63db9743a64b182
+  Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
 
 COCOAPODS: 0.33.1
