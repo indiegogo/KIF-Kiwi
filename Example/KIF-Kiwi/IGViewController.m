@@ -20,7 +20,7 @@
 @implementation IGViewController
 
 - (IBAction)tapButton:(UIButton *)sender {
-    [sender setTitle:@"Thank you!" forState:UIControlStateNormal];
+    [sender setTitle:@"Button tapped!" forState:UIControlStateNormal];
 }
 
 @end

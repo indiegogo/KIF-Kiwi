@@ -13,8 +13,8 @@ SPEC_BEGIN(SampleAppSpec)
 describe(@"Testable", ^{
     
     it(@"should have working button", ^{
-        [tester tapViewWithAccessibilityLabel:@"Press me"];
-        [tester waitForViewWithAccessibilityLabel:@"Thank you!"];
+        [tester tapViewWithAccessibilityLabel:@"Tap me"];
+        [tester waitForViewWithAccessibilityLabel:@"Button tapped!"];
     });
     
 });

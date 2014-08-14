@@ -7,4 +7,3 @@
 //
 
 #import "KWExample+KIFTester.h"
-#import "UIView+TestAdditions.h"

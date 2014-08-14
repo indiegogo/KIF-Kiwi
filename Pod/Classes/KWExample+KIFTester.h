@@ -12,6 +12,7 @@
 #ifdef KIFActorWithClass
 #undef KIFActorWithClass
 #endif
+
 #define KIFActorWithClass(clazz) \
     [clazz actorInFile:[NSString stringWithUTF8String:__FILE__] \
                 atLine:__LINE__ \
