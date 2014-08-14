@@ -34,7 +34,7 @@
                                                 message:[exception reason]];
     [self reportFailure:failure];
     if (stop && [[exception reason] rangeOfString:@"Failed to find accessibility element with the label"].location != NSNotFound) {
-        NSLog(@"all accessibility labels: %@", [[[UIApplication sharedApplication] keyWindow] allAccessibilityLabels]);
+        NSLog(@"All accessibility labels currently found in view: %@", [[[UIApplication sharedApplication] keyWindow] allAccessibilityLabels]);
     }
 }
 
@@ -50,7 +50,7 @@
     
     if (outputPath) {
         [[NSFileManager defaultManager] createDirectoryAtPath:outputPath withIntermediateDirectories:YES attributes:nil error:&error];
-        NSAssert1(!error, @"failed to create screenshot folder at: %@", outputPath);
+        NSAssert1(!error, @"Failed to create screenshot folder at: %@", outputPath);
     }
     
     UIApplication *app = [UIApplication sharedApplication];
