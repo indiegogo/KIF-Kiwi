@@ -2,15 +2,26 @@
 
 Write [KIF](https://github.com/kif-framework/KIF) tests [Kiwi](https://github.com/kiwi-bdd/Kiwi) style!
 
-KIF-Kiwi is a bridge between the Keep It Functional and Kiwi frameworks.  It allows you to perform KIF actions within Kiwi spec.
+KIF-Kiwi is a bridge between the Keep It Functional and Kiwi frameworks.  It allows you to perform KIF actions using Kiwi syntax.
 
 [![CI Status](http://img.shields.io/travis/IndieGoGo/KIF-Kiwi.svg?style=flat)](https://travis-ci.org/IndieGoGo/KIF-Kiwi)
 [![Version](https://img.shields.io/cocoapods/v/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![License](https://img.shields.io/cocoapods/l/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![Platform](https://img.shields.io/cocoapods/p/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 
+## Installation
+
+KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+    pod 'KIF-Kiwi'
+
+and run
+
+    pod install
+
 ## Usage
-See the [TestableSpec.m](https://github.com/IndieGoGo/KIF-Kiwi/blob/master/Example/Tests/TestableSpec.m) example:
+Include KIF-Kiwi in your specs and start writing KIF tests using Kiwi describe/context and it blocks.  See the [TestableSpec.m](https://github.com/IndieGoGo/KIF-Kiwi/blob/master/Example/Tests/TestableSpec.m) example:
 ```objective-c
 #import <KIF-Kiwi.h>
 
@@ -27,6 +38,10 @@ SPEC_BEGIN(MainViewAppSpec)
 	
 SPEC_END
 ```
+
+Please see the [KIF](https://github.com/kif-framework/KIF) and [Kiwi](https://github.com/kiwi-bdd/Kiwi) documentation for more information on these frameworks.
+
+## Testing
 
 To begin running the example project tests, clone the repo, and open xcode workspace in the `Example` directory:
 ```bash
@@ -56,17 +71,22 @@ The test output will show a description of the test:
 
 ```
 
+## Contributing
+Please report any issues.  PRs are always welcome!
+
+To submit a PR:
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+
 ## Requirements
 
 * Xcode >= 5.1
 * iOS 7
-
-## Installation
-
-KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-    pod 'KIF-Kiwi'
 
 ## Authors
 
