@@ -19,8 +19,8 @@ SPEC_BEGIN(MainViewAppSpec)
 	describe(@"Main view", ^{
 		
 		it(@"should have tappable button", ^{
-            [tester tapViewWithAccessibilityLabel:@"Press me"];
-            [tester waitForViewWithAccessibilityLabel:@"Thank you!"];
+            [tester tapViewWithAccessibilityLabel:@"Tap me"];
+            [tester waitForViewWithAccessibilityLabel:@"Button tapped!"];
 		});
 
 	});
