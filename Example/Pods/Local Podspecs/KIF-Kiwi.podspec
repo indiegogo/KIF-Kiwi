@@ -1,28 +1,19 @@
-#
-# Be sure to run `pod lib lint KIF-Kiwi.podspec' to ensure this is a
-# valid spec and remove all comments before submitting the spec.
-#
-# Any lines starting with a # are optional, but encouraged
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'KIF-Kiwi'
-  s.version          = '0.2.0'
-  s.summary          = 'Enable Behaviour Driven Integration Tests based on Kiwi using KIF'
+  s.version          = '0.2.2'
+  s.summary          = 'Enable Behaviour-Driven Integration Tests built on KIF using Kiwi syntax'
   s.description      = <<-DESC
-                       Write Kiwi specs to drive KIF actor thorugh user interface actions
+                       Write Kiwi specs to drive KIF actor through user interface actions.
 
                        * capture screenshots for failing tests
                        * share common setup using spec context
                        DESC
   s.homepage         = 'https://github.com/IndieGoGo/KIF-Kiwi'
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = {
+  s.authors           = {
       'Indiegogo' => 'tech+gogopair@indiegogo.com',
-      'Paul Zabelin' => 'paul@indiegogo.com'
+      'Paul Zabelin' => 'paul@indiegogo.com',
+      'Irvin Zhan' => 'irvintzhan@gmail.com'
   }
   s.source           = {
       :git => 'https://github.com/IndieGoGo/KIF-Kiwi.git',
@@ -34,7 +25,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
-  s.dependency 'Kiwi', '~> 2.3.0'
+  s.dependency 'Kiwi', '~> 2.3'
   s.dependency 'KIF', '~> 3.0.7'
   s.framework = 'XCTest'
 end
