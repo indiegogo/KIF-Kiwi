@@ -1,7 +1,24 @@
 target 'KIF-Kiwi', :exclusive => true do
+  pod "KIF-Kiwi", :path => "../"
 end
 
 target 'Tests', :exclusive => true do
   pod "KIF-Kiwi", :path => "../"
   pod 'FBSnapshotTestCase'
+end
+
+# Workround for XCTest/XCTest.h not found on old projects built in Xcode 6 issue in Cocoapods
+post_install do |installer|
+    installer.project.targets.each do |target|
+        if (target.to_s == "Pods-Tests-FBSnapshotTestCase") ||
+            (target.to_s == "Pods-KIF-Kiwi-KIF-Kiwi") ||
+            (target.to_s == "Pods-Tests-KIF-Kiwi")
+            target.build_configurations.each do |config|
+                s = config.build_settings['FRAMEWORK_SEARCH_PATHS']
+                s = [ '$(inherited)' ] if s == nil;
+                s.push('$(PLATFORM_DIR)/Developer/Library/Frameworks')
+                config.build_settings['FRAMEWORK_SEARCH_PATHS'] = s
+            end            
+        end
+    end
 end
