@@ -11,14 +11,15 @@ KIF-Kiwi is a bridge between the Keep It Functional and Kiwi frameworks.  It all
 
 ## Installation
 
-KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+KIF-Kiwi is available through [CocoaPods](http://cocoapods.org). To install KIF-Kiwi, simply add the following line to your Podfile:
 
     pod 'KIF-Kiwi'
 
 and run
 
     pod install
+    
+#### Note: to use Xcode 6, please install cocoapods 0.34rc2 or above.
 
 ## Usage
 Include KIF-Kiwi in your specs and start writing KIF tests using Kiwi describe/context and it blocks.  See the [TestableSpec.m](https://github.com/IndieGoGo/KIF-Kiwi/blob/master/Example/Tests/TestableSpec.m) example:
