@@ -1,0 +1,6 @@
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SDKROOT)/Developer/Library/Frameworks" "$(PLATFORM_DIR)/Developer/Library/Frameworks" $(PLATFORM_DIR)/Developer/Library/Frameworks $(inherited) "$(SDKROOT)/Developer/Library/Frameworks" "$(PLATFORM_DIR)/Developer/Library/Frameworks" "$(SDKROOT)/Developer/Library/Frameworks" $(inherited) "$(DEVELOPER_FRAMEWORKS_DIR)" "$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks" "$(PLATFORM_DIR)/Developer/Library/Frameworks"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/FBSnapshotTestCase" "${PODS_ROOT}/Headers/Public/KIF" "${PODS_ROOT}/Headers/Public/KIF-Kiwi" "${PODS_ROOT}/Headers/Public/Kiwi"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/FBSnapshotTestCase" -isystem "${PODS_ROOT}/Headers/Public/KIF" -isystem "${PODS_ROOT}/Headers/Public/KIF-Kiwi" -isystem "${PODS_ROOT}/Headers/Public/Kiwi" -DKIF_XCTEST
+OTHER_LDFLAGS = -ObjC -l"Pods-Tests-FBSnapshotTestCase" -l"Pods-Tests-KIF" -l"Pods-Tests-KIF-Kiwi" -l"Pods-Tests-Kiwi" -framework "CoreGraphics" -framework "XCTest"
+PODS_ROOT = ${SRCROOT}/Pods
