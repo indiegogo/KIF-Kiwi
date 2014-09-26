@@ -48,7 +48,7 @@ To begin running the example project tests, clone the repo, and open xcode works
 ```bash
 git clone https://github.com/IndieGoGo/KIF-Kiwi.git
 cd KIF-Kiwi/Example/
-open KIF-Kiwi.workspace
+open KIF-Kiwi.xcworkspace
 ```
 Press ```⌘-U``` in Xcode or select Product->Test from the menu to run the tests.
 
