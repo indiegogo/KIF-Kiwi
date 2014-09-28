@@ -1,3 +1,5 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
 target 'KIF-Kiwi', :exclusive => true do
     # even this target does not depend on any pods
     # we insert this dependency to workaround this cocoapods issue:  https://github.com/CocoaPods/CocoaPods/issues/2516
