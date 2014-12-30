@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'KIF-Kiwi'
-  s.version          = '0.2.2'
+  s.version          = '0.2.3'
   s.summary          = 'Enable Behaviour-Driven Integration Tests built on KIF using Kiwi syntax, supports Xcode 6.0'
   s.description      = <<-DESC
                        Write Kiwi specs to drive KIF actor through user interface actions.
@@ -26,6 +26,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Pod/Classes'
   s.dependency 'Kiwi', '~> 2.3.0'
-  s.dependency 'KIF', '~> 3.0.7'
+  s.dependency 'KIF', '~> 3.1.0'
   s.framework = 'XCTest'
 end

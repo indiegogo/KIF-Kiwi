@@ -238,6 +238,8 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  */
 - (void)longPressViewWithAccessibilityLabel:(NSString *)label value:(NSString *)value duration:(NSTimeInterval)duration;
 
+- (void)longPressAccessibilityElement:(UIAccessibilityElement *)element inView:(UIView *)view duration:(NSTimeInterval)duration;
+
 /*!
  @abstract Performs a long press on a particular view in the view hierarchy.
  @discussion The view or accessibility element with the given label is searched for in the view hierarchy. If the element isn't found or isn't currently tappable, then the step will attempt to wait until it is. Once the view is present and tappable, touch events are simulated in the center of the view or element.
@@ -250,9 +252,24 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  */
 - (void)longPressViewWithAccessibilityLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits duration:(NSTimeInterval)duration;
 
-- (void)waitForKeyboard;
 
-- (void)waitForAbsenceOfKeyboard;
+/*!
+ @abstract Waits for the software keyboard to be visible.
+ @discussion If input is also possible from a hardare keyboard @c waitForKeyInputReady may be more appropriate.
+ */
+- (void)waitForSoftwareKeyboard;
+- (void)waitForKeyboard KIF_DEPRECATED("Use waitForSoftwareKeyboard or waitForKeyInputReady.");
+
+/*!
+ @abstract If present, waits for the software keyboard to dismiss.
+ */
+- (void)waitForAbsenceOfSoftwareKeyboard;
+- (void)waitForAbsenceOfKeyboard KIF_DEPRECATED("Use waitForAbscenseOfSoftwareKeyboard.");
+
+/*!
+ @abstract Waits for the keyboard to be ready for input.  This tests whether or not a hardware or software keyboard is available and if the keyboard has a responder to send events to.
+ */
+- (void)waitForKeyInputReady;
 
 /*!
  @abstract Enters text into a the current first responder.
@@ -260,6 +277,7 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  @param text The text to enter.
  */
 - (void)enterTextIntoCurrentFirstResponder:(NSString *)text;
+- (void)enterTextIntoCurrentFirstResponder:(NSString *)text fallbackView:(UIView *)fallbackView;
 
 /*!
  @abstract Enters text into a particular view in the view hierarchy.
@@ -281,9 +299,12 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
 
 - (void)clearTextFromViewWithAccessibilityLabel:(NSString *)label;
 - (void)clearTextFromViewWithAccessibilityLabel:(NSString *)label traits:(UIAccessibilityTraits)traits;
+- (void)clearTextFromElement:(UIAccessibilityElement*)element inView:(UIView*)view;
 
 - (void)clearTextFromAndThenEnterText:(NSString *)text intoViewWithAccessibilityLabel:(NSString *)label;
 - (void)clearTextFromAndThenEnterText:(NSString *)text intoViewWithAccessibilityLabel:(NSString *)label traits:(UIAccessibilityTraits)traits expectedResult:(NSString *)expectedResult;
+
+- (void)expectView:(UIView *)view toContainText:(NSString *)expectedResult;
 
 /*!
  @abstract Selects an item from a currently visible picker view.
@@ -291,6 +312,14 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  @param title The title of the row to select.
  */
 - (void)selectPickerViewRowWithTitle:(NSString *)title;
+
+/*!
+ @abstract Selects an item from a currently visible picker view in specified component.
+ @discussion With a picker view already visible, this step will find an item with the given title in given component, select that item, and tap the Done button.
+ @param title The title of the row to select.
+ @param component The component tester inteds to select the title in.
+ */
+- (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component;
 
 /*!
  @abstract Selects a value from a currently visible date picker view.
@@ -314,6 +343,7 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  @param label The accessibility label of the element to drag.
  */
 - (void)setValue:(float)value forSliderWithAccessibilityLabel:(NSString *)label;
+- (void)setValue:(float)value forSlider:(UISlider *)slider;
 
 /*!
  @abstract Dismisses a popover on screen.
@@ -324,8 +354,8 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
 /*!
  @abstract Select a certain photo from the built in photo picker.
  @discussion This set of steps expects that the photo picker has been initiated and that the sheet is up. From there it will tap the "Choose Photo" button and select the desired photo.
- @param albumName The name of the album to select the photo from.
- @param row The row number in the album for the desired photo.
+ @param albumName The name of the album to select the photo from. (1-indexed)
+ @param row The row number in the album for the desired photo. (1-indexed)
  @param column The column number in the album for the desired photo.
  */
 - (void)choosePhotoInAlbum:(NSString *)albumName atRow:(NSInteger)row column:(NSInteger)column;
@@ -362,6 +392,14 @@ static inline KIFDisplacement KIFDisplacementForSwipingInDirection(KIFSwipeDirec
  @param identifier Accessibility identifier of the collection view.
  */
 - (void)tapItemAtIndexPath:(NSIndexPath *)indexPath inCollectionViewWithAccessibilityIdentifier:(NSString *)identifier;
+
+#if TARGET_IPHONE_SIMULATOR
+/*!
+ @abstract If present, dismisses a system alert with the last button, usually 'Allow'.
+ @discussion Use this to dissmiss a location services authorization dialog or a photos access dialog by tapping the 'Allow' button. No action is taken if no alert is present.
+ */
+- (void)acknowledgeSystemAlert;
+#endif
 
 /*!
  @abstract Swipes a particular view in the view hierarchy in the given direction.
