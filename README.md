@@ -19,8 +19,6 @@ and run
 
     pod install
     
-#### Note: to use Xcode 6, please install cocoapods 0.34rc2 or above.
-
 ## Usage
 Include KIF-Kiwi in your specs and start writing KIF tests using Kiwi describe/context and it blocks.  See the [TestableSpec.m](https://github.com/IndieGoGo/KIF-Kiwi/blob/master/Example/Tests/TestableSpec.m) example:
 ```objective-c
