@@ -35,6 +35,7 @@
     [self reportFailure:failure];
     if (stop && [[exception reason] rangeOfString:@"Failed to find accessibility element with the label"].location != NSNotFound) {
         NSLog(@"All accessibility labels currently found in view: %@", [[[UIApplication sharedApplication] keyWindow] allAccessibilityLabels]);
+        [exception raise];
     }
 }
 
