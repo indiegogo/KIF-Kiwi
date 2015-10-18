@@ -20,6 +20,9 @@
 
 @implementation KWExample (KIFTester)
 
+NSString *const kExceptionFilenameKey = @"FilenameKey";
+NSString *const kExceptionLinenumberKey = @"LineNumberKey";
+
 #pragma mark - KIFTestActorDelegate
 
 - (void)failWithException:(NSException *)exception stopTest:(BOOL)stop {
@@ -28,8 +31,8 @@
         [self writeScreenshotForException:exception];
     }
     
-    KWCallSite *callsite = [KWCallSite callSiteWithFilename:[exception userInfo][@"SenTestFilenameKey"]
-                                                 lineNumber:[[exception userInfo][@"SenTestLineNumberKey"] unsignedIntegerValue]];
+    KWCallSite *callsite = [KWCallSite callSiteWithFilename:[exception userInfo][kExceptionFilenameKey]
+                                                 lineNumber:[[exception userInfo][kExceptionLinenumberKey] unsignedIntegerValue]];
     KWFailure *failure = [KWFailure failureWithCallSite:callsite
                                                 message:[exception reason]];
     [self reportFailure:failure];
@@ -55,14 +58,14 @@
     
     UIApplication *app = [UIApplication sharedApplication];
     NSString *description = [[self descriptionWithContext] stringByReplacingOccurrencesOfString:@"/" withString:@""];
-    [app writeScreenshotForLine:[[exception userInfo][@"SenTestLineNumberKey"] unsignedIntegerValue]
-                         inFile:[exception userInfo][@"SenTestFilenameKey"]
+    [app writeScreenshotForLine:[[exception userInfo][kExceptionLinenumberKey] unsignedIntegerValue]
+                         inFile:[exception userInfo][kExceptionFilenameKey]
                     description:description
                           error:&error];
     if (error) {
         error = nil;
-        [app writeScreenshotForLine:[[exception userInfo][@"SenTestLineNumberKey"] unsignedIntegerValue]
-                             inFile:[exception userInfo][@"SenTestFilenameKey"]
+        [app writeScreenshotForLine:[[exception userInfo][kExceptionLinenumberKey] unsignedIntegerValue]
+                             inFile:[exception userInfo][kExceptionFilenameKey]
                         description:nil
                               error:&error];
     }
