@@ -15,7 +15,7 @@
 // This implementation reports failure with the correct context to the line of code where failure happend
 // using SenTestCase implementaiton of this example cause lost of context
 //
-#import <UIApplication-KIFAdditions.h>
+#import <KIF/UIApplication-KIFAdditions.h>
 #import "UIView+TestAdditions.h"
 
 @implementation KWExample (KIFTester)
