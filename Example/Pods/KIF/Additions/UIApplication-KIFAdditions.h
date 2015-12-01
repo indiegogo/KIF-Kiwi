@@ -17,6 +17,11 @@
 UIKIT_EXTERN NSString *const UIApplicationDidMockOpenURLNotification;
 
 /*!
+ @abstract When mocking @c -canOpenURL:, this notification is posted.
+ */
+UIKIT_EXTERN NSString *const UIApplicationDidMockCanOpenURLNotification;
+
+/*!
  @abstract The key for the opened URL in the @c UIApplicationDidMockOpenURLNotification notification.
  */
 UIKIT_EXTERN NSString *const UIApplicationOpenedURLKey;
@@ -100,8 +105,6 @@ UIKIT_EXTERN NSString *const UIApplicationOpenedURLKey;
 @end
 
 @interface UIApplication (Private)
-- (BOOL)rotateIfNeeded:(UIDeviceOrientation)orientation;
-- (void)rotateIfNeeded:(UIDeviceOrientation)orientation completion:(void (^)(void))completion;
 - (UIWindow *)statusBarWindow;
 @property(getter=isStatusBarHidden) BOOL statusBarHidden;
 @end
