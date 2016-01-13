@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Indiegogo Inc. All rights reserved.
 //
 
-#import <Kiwi.h>
-#import <KIF.h>
+#import <Kiwi/Kiwi.h>
+#import <KIF/KIF.h>
 
 #ifdef KIFActorWithClass
 #undef KIFActorWithClass

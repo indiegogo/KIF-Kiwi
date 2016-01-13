@@ -7,7 +7,7 @@
 //
 
 #import "UIView+TestAdditions.h"
-#import <UIView-KIFAdditions.h>
+#import <KIF/UIView-KIFAdditions.h>
 
 @implementation UIView (TestAdditions)
 

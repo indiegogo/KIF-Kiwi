@@ -7,19 +7,19 @@
 //  See the LICENSE file distributed with this work for the terms under
 //  which Square, Inc. licenses this file to you.
 
-#ifndef KIF_SENTEST
 #import <XCTest/XCTest.h>
 #import "NSException-KIFAdditions.h"
-#else
-#import <SenTestingKit/SenTestingKit.h>
-#endif
-
 #import "KIFTestActor.h"
 #import "NSError-KIFAdditions.h"
 #import <dlfcn.h>
 #import <objc/runtime.h>
 #import "UIApplication-KIFAdditions.h"
 #import "UIView-KIFAdditions.h"
+
+@interface AccessibilitySettingsController
+- (void)setAXInspectorEnabled:(NSNumber*)enabled specifier:(id)specifier;
+@end
+
 
 @implementation KIFTestActor
 
@@ -34,10 +34,10 @@
 
 + (void)_enableAccessibility;
 {
-    NSString *appSupportLocation = @"/System/Library/PrivateFrameworks/AppSupport.framework/AppSupport";
-    
     NSDictionary *environment = [[NSProcessInfo processInfo] environment];
     NSString *simulatorRoot = [environment objectForKey:@"IPHONE_SIMULATOR_ROOT"];
+    
+    NSString *appSupportLocation = @"/System/Library/PrivateFrameworks/AppSupport.framework/AppSupport";
     if (simulatorRoot) {
         appSupportLocation = [simulatorRoot stringByAppendingString:appSupportLocation];
     }
@@ -54,6 +54,18 @@
             CFRelease(accessibilityDomain);
         }
     }
+    
+    NSString* accessibilitySettingsBundleLocation = @"/System/Library/PreferenceBundles/AccessibilitySettings.bundle/AccessibilitySettings";
+    if (simulatorRoot) {
+        accessibilitySettingsBundleLocation = [simulatorRoot stringByAppendingString:accessibilitySettingsBundleLocation];
+    }
+    const char *accessibilitySettingsBundlePath = [accessibilitySettingsBundleLocation fileSystemRepresentation];
+    void* accessibilitySettingsBundle = dlopen(accessibilitySettingsBundlePath, RTLD_LAZY);
+    if (accessibilitySettingsBundle) {
+        Class axSettingsPrefControllerClass = NSClassFromString(@"AccessibilitySettingsController");
+        id axSettingPrefController = [[axSettingsPrefControllerClass alloc] init];
+        [axSettingPrefController setAXInspectorEnabled:@(YES) specifier:nil];
+    }
 }
 
 - (instancetype)initWithFile:(NSString *)file line:(NSInteger)line delegate:(id<KIFTestActorDelegate>)delegate
@@ -64,6 +76,7 @@
         _line = line;
         _delegate = delegate;
         _executionBlockTimeout = [[self class] defaultTimeout];
+        _animationWaitingTimeout = [[self class] defaultAnimationWaitingTimeout];
     }
     return self;
 }
@@ -131,8 +144,19 @@
 
 #pragma mark Class Methods
 
+static NSTimeInterval KIFTestStepDefaultAnimationWaitingTimeout = 0.5;
 static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 static NSTimeInterval KIFTestStepDelay = 0.1;
+
++ (NSTimeInterval)defaultAnimationWaitingTimeout
+{
+    return KIFTestStepDefaultAnimationWaitingTimeout;
+}
+
++ (void)setDefaultAnimationWaitingTimeout:(NSTimeInterval)newDefaultAnimationWaitingTimeout;
+{
+    KIFTestStepDefaultAnimationWaitingTimeout = newDefaultAnimationWaitingTimeout;
+}
 
 + (NSTimeInterval)defaultTimeout;
 {
@@ -177,33 +201,6 @@ static NSTimeInterval KIFTestStepDelay = 0.1;
         return KIFTestStepResultSuccess;
     } timeout:timeInterval + 1];
 }
-
--(void)waitForAnimationsToFinish {
-    NSTimeInterval maximumWaitingTimeInterval = 3;
-    
-    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
-    [self runBlock:^KIFTestStepResult(NSError **error) {
-        __block BOOL runningAnimationFound = false;
-        for (UIWindow *window in [UIApplication sharedApplication].windowsWithKeyWindow) {
-            [window performBlockOnDescendentViews:^(UIView *view, BOOL *stop) {
-                if (view.layer.animationKeys.count != 0 &&
-                    ![view.layer.animationKeys isEqualToArray:@[@"_UIParallaxMotionEffect"]] &&     // explicitly exclude _UIParallaxMotionEffect as it is used in alertviews, and we don't want every alertview to be paused
-                    [view isVisibleInViewHierarchy]                                                 // do not wait for animatinos of views that aren't visible
-                    ) {
-                    
-                    runningAnimationFound = YES;
-                    if (stop != NULL) {
-                        *stop = YES;
-                    }
-                    return;
-                }
-            }];
-        }
-        
-        return runningAnimationFound && ([NSDate timeIntervalSinceReferenceDate] - startTime) < maximumWaitingTimeInterval ? KIFTestStepResultWait : KIFTestStepResultSuccess;
-    }      timeout:maximumWaitingTimeInterval + 1];
-}
-
 
 @end
 
