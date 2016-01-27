@@ -36,7 +36,7 @@ NSString *const kExceptionLinenumberKey = @"LineNumberKey";
     KWFailure *failure = [KWFailure failureWithCallSite:callsite
                                                 message:[exception reason]];
     [self reportFailure:failure];
-    if (stop && [[exception reason] rangeOfString:@"Failed to find accessibility element with the label"].location != NSNotFound) {
+    if (stop && ([[exception reason] rangeOfString:@"Failed to find accessibility element with the label"].location != NSNotFound || [[exception reason] rangeOfString:@"Could not find view matching"].location != NSNotFound)) {
         NSLog(@"All accessibility labels currently found in view: %@", [[[UIApplication sharedApplication] keyWindow] allAccessibilityLabels]);
         [exception raise];
     }
