@@ -16,7 +16,7 @@
   },
   "social_media_url": "https://twitter.com/IndieGoGo",
   "platforms": {
-    "ios": "7.0"
+    "ios": "8.0"
   },
   "requires_arc": true,
   "source_files": "Pod/Classes",

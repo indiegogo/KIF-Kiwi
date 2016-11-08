@@ -7,3 +7,4 @@
 //
 
 #import "KWExample+KIFTester.h"
+#import "KWSpec+KIFAdditions.h"
