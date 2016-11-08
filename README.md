@@ -4,7 +4,7 @@ Write [KIF](https://github.com/kif-framework/KIF) tests [Kiwi](https://github.co
 
 KIF-Kiwi is a bridge between the Keep It Functional and Kiwi frameworks.  It allows you to perform KIF actions using Kiwi syntax.
 
-[![CI Status](http://img.shields.io/travis/IndieGoGo/KIF-Kiwi.svg?style=flat)](https://travis-ci.org/IndieGoGo/KIF-Kiwi)
+[![CI Status](http://img.shields.io/travis/indiegogo/KIF-Kiwi.svg?style=flat)](https://travis-ci.org/indiegogo/KIF-Kiwi)
 [![Version](https://img.shields.io/cocoapods/v/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![License](https://img.shields.io/cocoapods/l/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
 [![Platform](https://img.shields.io/cocoapods/p/KIF-Kiwi.svg?style=flat)](http://cocoadocs.org/docsets/KIF-Kiwi)
@@ -52,12 +52,13 @@ Press ```⌘-U``` in Xcode or select Product->Test from the menu to run the test
 
 You can also run the example tests from the command-line:
 ```
-xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator
+xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator -destination <device on your system>
 ```
-or by using [xctool](https://github.com/facebook/xctool):
+e.g. 
 ```
-xctool test
+xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=10.1,name=iPhone 6s'
 ```
+
 The test output will show a description of the test:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -84,14 +85,24 @@ To submit a PR:
 
 ## Requirements
 
-* Xcode >= 5.1
-* iOS 7
+* Xcode 8.1 
+* iOS 8
 
 ## Authors
 
 * Pair of developers at Indiegogo, tech+gogopair@indiegogo.com
-* Paul Zabelin, paul@indiegogo.com
-* Irvin Zhan, irvintzhan@gmail.com
+* Paul Zabelin
+* Irvin Zhan
+
+## Maintainer
+
+* [Glen Tregoning](https://github.com/glentregoning)
+
+## Contributions 
+
+* [@ecaselles](https://github.com/ecaselles)
+* [@emmaviolet](https://github.com/emmaviolet)
+
 
 ## License
 
