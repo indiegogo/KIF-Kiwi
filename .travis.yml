@@ -1,9 +1,6 @@
 # reference: http://www.objc.io/issue-6/travis-ci.html
 
 language: objective-c
-before_install:
-- brew update
-- brew unlink xctool
-- brew install --HEAD xctool
 script:
-- xctool test -workspace Example/KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+- export DEVICE_ID=`instruments -s devices | grep iPhone | sed 's/.*\[\(.*\)\].*/\1/p' | head -n 1`
+- cd Example; xcodebuild test -workspace KIF-Kiwi.xcworkspace -scheme KIF-Kiwi -sdk iphonesimulator -destination "id=$DEVICE_ID"
