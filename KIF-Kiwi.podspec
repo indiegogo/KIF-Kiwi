@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'KIF-Kiwi'
-  s.version          = '0.2.5'
+  s.version          = '0.2.6'
   s.summary          = 'Enable Behaviour-Driven Integration Tests built on KIF using Kiwi syntax, supports Xcode 6.0'
   s.description      = <<-DESC
                        Write Kiwi specs to drive KIF actor through user interface actions.
@@ -12,8 +12,7 @@ Pod::Spec.new do |s|
   s.license          = 'MIT'
   s.authors           = {
       'Indiegogo' => 'tech+gogopair@indiegogo.com',
-      'Paul Zabelin' => 'paul@indiegogo.com',
-      'Irvin Zhan' => 'irvintzhan@gmail.com'
+      'Glen Tregoning' => 'glen+cocoapods@indiegogo.com'
   }
   s.source           = {
       :git => 'https://github.com/IndieGoGo/KIF-Kiwi.git',
