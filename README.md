@@ -96,7 +96,7 @@ To submit a PR:
 
 ## Maintainer
 
-* [Glen Tregoning](https://github.com/glentregoning)
+* [Jan Jirout](https://github.com/janj)
 
 ## Contributions 
 
