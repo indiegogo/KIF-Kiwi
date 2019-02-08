@@ -8,20 +8,40 @@
 //  which Square, Inc. licenses this file to you.
 
 #import "KIFUITestActor.h"
-#import "KIFSystemTestActor.h"
-#import "UIApplication-KIFAdditions.h"
-#import "UIWindow-KIFAdditions.h"
-#import "UIAccessibilityElement-KIFAdditions.h"
-#import "UIScreen+KIFAdditions.h"
-#import "UIView-KIFAdditions.h"
+
 #import "CALayer-KIFAdditions.h"
-#import "UITableView-KIFAdditions.h"
 #import "CGGeometry-KIFAdditions.h"
-#import "NSError-KIFAdditions.h"
+#import "KIFSystemTestActor.h"
+#import "KIFTestActor_Private.h"
 #import "KIFTypist.h"
+#import "NSError-KIFAdditions.h"
+#import "UIAccessibilityElement-KIFAdditions.h"
+#import "UIApplication-KIFAdditions.h"
 #import "UIAutomationHelper.h"
+#import "UIScreen+KIFAdditions.h"
+#import "UITableView-KIFAdditions.h"
+#import "UIView-KIFAdditions.h"
+#import "UIWindow-KIFAdditions.h"
 
 #define kKIFMinorSwipeDisplacement 5
+
+
+#if DEPRECATE_KIF_TESTER
+KIFUITestActor *_KIF_tester()
+{
+    NSCAssert(NO, @"Attempting to use deprecated `KIFUITestActor`!");
+    return nil;
+}
+#endif
+
+
+@interface KIFUITestActor ()
+
+@property (nonatomic, assign) BOOL validateEnteredText;
+
+@end
+
+static BOOL KIFUITestActorAnimationsEnabled = YES;
 
 @implementation KIFUITestActor
 
@@ -30,6 +50,20 @@
     if (self == [KIFUITestActor class]) {
         [KIFTypist registerForNotifications];
     }
+}
+
+- (instancetype)initWithFile:(NSString *)file line:(NSInteger)line delegate:(id<KIFTestActorDelegate>)delegate;
+{
+    self = [super initWithFile:file line:line delegate:delegate];
+    NSParameterAssert(self);
+    _validateEnteredText = YES;
+    return self;
+}
+
+- (instancetype)validateEnteredText:(BOOL)validateEnteredText;
+{
+    self.validateEnteredText = validateEnteredText;
+    return self;
 }
 
 - (UIView *)waitForViewWithAccessibilityLabel:(NSString *)label
@@ -73,14 +107,14 @@
     return view;
 }
 
-- (void)waitForAccessibilityElement:(UIAccessibilityElement **)element view:(out UIView **)view withLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits tappable:(BOOL)mustBeTappable
+- (void)waitForAccessibilityElement:(UIAccessibilityElement * __autoreleasing *)element view:(out UIView * __autoreleasing *)view withLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits tappable:(BOOL)mustBeTappable
 {
     [self runBlock:^KIFTestStepResult(NSError **error) {
         return [UIAccessibilityElement accessibilityElement:element view:view withLabel:label value:value traits:traits tappable:mustBeTappable error:error] ? KIFTestStepResultSuccess : KIFTestStepResultWait;
     }];
 }
 
-- (void)waitForAccessibilityElement:(UIAccessibilityElement **)element view:(out UIView **)view withLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits fromRootView:(UIView *)fromView tappable:(BOOL)mustBeTappable
+- (void)waitForAccessibilityElement:(UIAccessibilityElement * __autoreleasing *)element view:(out UIView * __autoreleasing *)view withLabel:(NSString *)label value:(NSString *)value traits:(UIAccessibilityTraits)traits fromRootView:(UIView *)fromView tappable:(BOOL)mustBeTappable
 {
     [self runBlock:^KIFTestStepResult(NSError **error) {
         return [UIAccessibilityElement accessibilityElement:element view:view withLabel:label value:value traits:traits fromRootView:fromView tappable:mustBeTappable error:error];
@@ -103,7 +137,7 @@
     }];
 }
 
-- (void)waitForAccessibilityElement:(UIAccessibilityElement **)element view:(out UIView **)view withElementMatchingPredicate:(NSPredicate *)predicate tappable:(BOOL)mustBeTappable
+- (void)waitForAccessibilityElement:(UIAccessibilityElement * __autoreleasing *)element view:(out UIView * __autoreleasing *)view withElementMatchingPredicate:(NSPredicate *)predicate tappable:(BOOL)mustBeTappable
 {
     [self runBlock:^KIFTestStepResult(NSError **error) {
         return [UIAccessibilityElement accessibilityElement:element view:view withElementMatchingPredicate:predicate tappable:mustBeTappable error:error] ? KIFTestStepResultSuccess : KIFTestStepResultWait;
@@ -176,48 +210,87 @@
 }
 
 - (void)waitForAnimationsToFinishWithTimeout:(NSTimeInterval)timeout stabilizationTime:(NSTimeInterval)stabilizationTime {
+    [self waitForAnimationsToFinishWithTimeout:timeout stabilizationTime:stabilizationTime mainThreadDispatchStabilizationTime:self.mainThreadDispatchStabilizationTimeout];
+}
+
+- (void)waitForAnimationsToFinishWithTimeout:(NSTimeInterval)timeout stabilizationTime:(NSTimeInterval)stabilizationTime mainThreadDispatchStabilizationTime:(NSTimeInterval)mainThreadDispatchStabilizationTime {
     NSTimeInterval maximumWaitingTimeInterval = timeout;
     if (maximumWaitingTimeInterval <= stabilizationTime) {
         if(maximumWaitingTimeInterval >= 0) {
             [self waitForTimeInterval:maximumWaitingTimeInterval relativeToAnimationSpeed:YES];
         }
-        
-        return;
-    }
+    } else {
     
-    // Wait for the view to stabilize and give them a chance to start animations before we wait for them.
-    [self waitForTimeInterval:stabilizationTime relativeToAnimationSpeed:YES];
-    maximumWaitingTimeInterval -= stabilizationTime;
-    
-    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
-    [self runBlock:^KIFTestStepResult(NSError **error) {
-        __block BOOL runningAnimationFound = false;
-        for (UIWindow *window in [UIApplication sharedApplication].windowsWithKeyWindow) {
-            [window performBlockOnDescendentViews:^(UIView *view, BOOL *stop) {
-                BOOL isViewVisible = [view isVisibleInViewHierarchy];   // do not wait for animations of views that aren't visible
-                BOOL hasUnfinishedSystemAnimation = [NSStringFromClass(view.class) isEqualToString:@"_UIParallaxDimmingView"];  // indicates that the view-hierarchy is in an in-between-state of an animation
-                if (isViewVisible && ([view.layer hasAnimations] || hasUnfinishedSystemAnimation)) {
-                    runningAnimationFound = YES;
-                    if (stop != NULL) {
-                        *stop = YES;
-                    }
-                    return;
-                }
-            }];
-        }
+        // Wait for the view to stabilize and give them a chance to start animations before we wait for them.
+        [self waitForTimeInterval:stabilizationTime relativeToAnimationSpeed:YES];
+        maximumWaitingTimeInterval -= stabilizationTime;
 
-        if (runningAnimationFound) {
-            BOOL hasTimeRemainingToWait = ([NSDate timeIntervalSinceReferenceDate] - startTime) < maximumWaitingTimeInterval;
-            if (hasTimeRemainingToWait) {
-                return KIFTestStepResultWait;
-            } else {
-                // Animations appear to still exist, but we've hit our time limit
-                return KIFTestStepResultSuccess;
+        NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+        [self runBlock:^KIFTestStepResult(NSError **error) {
+            __block BOOL runningAnimationFound = false;
+            for (UIWindow *window in [UIApplication sharedApplication].windowsWithKeyWindow) {
+                [window performBlockOnDescendentViews:^(UIView *view, BOOL *stop) {
+                    BOOL isViewVisible = [view isVisibleInViewHierarchy];   // do not wait for animations of views that aren't visible
+                    BOOL hasUnfinishedSystemAnimation = [NSStringFromClass(view.class) isEqualToString:@"_UIParallaxDimmingView"];  // indicates that the view-hierarchy is in an in-between-state of an animation
+                    if (isViewVisible && ([view.layer hasAnimations] || hasUnfinishedSystemAnimation)) {
+                        runningAnimationFound = YES;
+                        if (stop != NULL) {
+                            *stop = YES;
+                        }
+                        return;
+                    }
+                }];
             }
-        }
-        
-        return KIFTestStepResultSuccess;
-    } timeout:maximumWaitingTimeInterval + 1];
+
+            if (runningAnimationFound) {
+                BOOL hasTimeRemainingToWait = ([NSDate timeIntervalSinceReferenceDate] - startTime) < maximumWaitingTimeInterval;
+                if (hasTimeRemainingToWait) {
+                    return KIFTestStepResultWait;
+                } else {
+                    // Animations appear to still exist, but we've hit our time limit
+                    return KIFTestStepResultSuccess;
+                }
+            }
+
+            return KIFTestStepResultSuccess;
+        } timeout:maximumWaitingTimeInterval + 1];
+    }
+
+    /*
+     *  On very rare occasions, a race condition can occur where a touch event enqueued on the main queue runloop will
+     *  execute before the UI element it's intended to tap has appeared onscreen. KIF can then potentially send UI tap
+     *  events to a view while it's still in the process of animating.
+     *  By enqueuing a task on the main thread and spinning a runloop until its execution before the end of
+     *  waitForAnimationsToFinishWithTimeout, we should be able to avoid this race condition.
+     */
+
+    if(mainThreadDispatchStabilizationTime > 0) {
+        __block BOOL waitForRunloopTaskToProcess = NO;
+
+        NSTimeInterval startOfMainDispatchQueueStabilization = [NSDate timeIntervalSinceReferenceDate];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            waitForRunloopTaskToProcess = YES;
+        });
+
+        [self runBlock:^KIFTestStepResult(NSError *__autoreleasing *error) {
+            NSTimeInterval elapsedTime = [NSDate timeIntervalSinceReferenceDate] - startOfMainDispatchQueueStabilization;
+            if(!waitForRunloopTaskToProcess) {
+                if(elapsedTime < mainThreadDispatchStabilizationTime) {
+                    return KIFTestStepResultWait;
+                } else {
+                    // The main thread is still blocked, but we've hit our time limit
+                    NSLog(@"WARN: Main thread still blocked while waiting %fs after animations completed!", mainThreadDispatchStabilizationTime);
+                    return KIFTestStepResultSuccess;
+                }
+            }
+
+            if(elapsedTime > mainThreadDispatchStabilizationTime) {
+                NSLog(@"WARN: Main thread was blocked for more than %fs after animations completed!", stabilizationTime);
+            }
+
+            return KIFTestStepResultSuccess;
+        } timeout:mainThreadDispatchStabilizationTime + 1];
+    }
 }
 
 - (void)tapViewWithAccessibilityLabel:(NSString *)label
@@ -441,7 +514,9 @@
     }
 
     [self enterTextIntoCurrentFirstResponder:text fallbackView:view];
-    [self expectView:view toContainText:expectedResult ?: text];
+    if (self.validateEnteredText) {
+        [self expectView:view toContainText:expectedResult ?: text];
+    }
 }
 
 - (void)expectView:(UIView *)view toContainText:(NSString *)expectedResult
@@ -470,9 +545,11 @@
 
 - (void)clearTextFromFirstResponder
 {
-    UIView *firstResponder = (id)[[[UIApplication sharedApplication] keyWindow] firstResponder];
-    if ([firstResponder isKindOfClass:[UIView class]]) {
-        [self clearTextFromElement:(UIAccessibilityElement *)firstResponder inView:firstResponder];
+    @autoreleasepool {
+        UIView *firstResponder = (id)[[[UIApplication sharedApplication] keyWindow] firstResponder];
+        if ([firstResponder isKindOfClass:[UIView class]]) {
+            [self clearTextFromElement:(UIAccessibilityElement *)firstResponder inView:firstResponder];
+        }
     }
 }
 
@@ -556,31 +633,67 @@
     return @"";
 }
 
-- (void)selectDatePickerValue:(NSArray *)datePickerColumnValues
-{
-    [self selectPickerValue:datePickerColumnValues pickerType:KIFUIDatePicker];
-}
-
 - (void)selectPickerViewRowWithTitle:(NSString *)title
 {
     NSArray *dataToSelect = @[ title ];
-    [self selectPickerValue:dataToSelect pickerType:KIFUIPickerView];
+    [self selectPickerValue:dataToSelect fromPicker:nil pickerType:KIFUIPickerView withSearchOrder:KIFPickerSearchForwardFromStart];
 }
 
 - (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component
 {
+    [self selectPickerViewRowWithTitle:title inComponent:component fromPicker:nil withSearchOrder:KIFPickerSearchForwardFromStart];
+}
+
+- (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component withSearchOrder:(KIFPickerSearchOrder)searchOrder
+{
+    [self selectPickerViewRowWithTitle:title inComponent:component fromPicker:nil withSearchOrder:searchOrder];
+}
+
+- (void)selectDatePickerValue:(NSArray *)datePickerColumnValues
+{
+    [self selectPickerValue:datePickerColumnValues fromPicker:nil pickerType:KIFUIDatePicker withSearchOrder:KIFPickerSearchForwardFromStart];
+}
+- (void)selectDatePickerValue:(NSArray *)datePickerColumnValues withSearchOrder:(KIFPickerSearchOrder)searchOrder
+{
+    [self selectPickerValue:datePickerColumnValues fromPicker:nil pickerType:KIFUIDatePicker withSearchOrder:searchOrder];
+}
+
+- (void)selectDatePickerValue:(NSArray *)datePickerColumnValues fromPicker:(UIPickerView *)picker withSearchOrder:(KIFPickerSearchOrder)searchOrder
+{
+    [self selectPickerValue:datePickerColumnValues fromPicker:picker pickerType:KIFUIDatePicker withSearchOrder:searchOrder];
+}
+
+- (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component fromPicker:(UIPickerView *)picker
+{
+    [self selectPickerViewRowWithTitle:title inComponent:component fromPicker:picker withSearchOrder:KIFPickerSearchForwardFromStart];
+}
+
+- (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component fromPicker:(UIPickerView *)picker withSearchOrder:(KIFPickerSearchOrder)searchOrder
+{
     NSMutableArray *dataToSelect = [[NSMutableArray alloc] init];
 
-    // Assume it is datePicker and then test our hypothesis later!
-    UIPickerView *pickerView = [[[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
-
-    // Check which type of UIPickerVIew is visible on current window.
+    UIPickerView *pickerView = picker;
     KIFPickerType pickerType = 0;
-    if ([pickerView respondsToSelector:@selector(setDate:animated:)]) {
-        pickerType = KIFUIDatePicker;
+
+    if (pickerView == nil) {
+        // Find all pickers in view. Either UIDatePickerView or UIPickerView
+        NSArray *datePickerViews = [[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"];
+        NSArray *pickerViews = [[[UIApplication sharedApplication] pickerViewWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"];
+
+        // Grab one picker and assume it is datePicker and then test our hypothesis later!
+        pickerView = [datePickerViews lastObject];
+        if ([pickerView respondsToSelector:@selector(setDate:animated:)]) {
+            pickerType = KIFUIDatePicker;
+        } else {
+            pickerView = [pickerViews lastObject];
+            pickerType = KIFUIPickerView;
+        }
     } else {
-        pickerType = KIFUIPickerView;
-        pickerView = [[[[UIApplication sharedApplication] pickerViewWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+        if ([pickerView respondsToSelector:@selector(setDate:animated:)]) {
+            pickerType = KIFUIDatePicker;
+        } else {
+            pickerType = KIFUIPickerView;
+        }
     }
 
     // Add title at component index and add empty strings for other.
@@ -593,14 +706,20 @@
             NSString *rowTitle = nil;
             if ([pickerView.delegate respondsToSelector:@selector(pickerView:titleForRow:forComponent:)]) {
                 rowTitle = [pickerView.delegate pickerView:pickerView titleForRow:currentIndex forComponent:i];
+            } else if ([pickerView.delegate respondsToSelector:@selector(pickerView:attributedTitleForRow:forComponent:)]) {
+                rowTitle = [[pickerView.delegate pickerView:pickerView attributedTitleForRow:currentIndex forComponent:i] string];
             } else if ([pickerView.delegate respondsToSelector:@selector(pickerView:viewForRow:forComponent:reusingView:)]) {
                 // This delegate inserts views directly, so try to figure out what the title is by looking for a label
                 UIView *rowView = [pickerView.delegate pickerView:pickerView viewForRow:currentIndex forComponent:i reusingView:nil];
-                NSArray *labels = [rowView subviewsWithClassNameOrSuperClassNamePrefix:@"UILabel"];
-                UILabel *label = (labels.count > 0 ? labels[0] : nil);
-                rowTitle = label.text;
+                if ([rowView isKindOfClass:[UILabel class]]) {
+                    UILabel *label = (UILabel *) rowView;
+                    rowTitle = label.text;
+                } else {
+                    NSArray *labels = [rowView subviewsWithClassNameOrSuperClassNamePrefix:@"UILabel"];
+                    UILabel *label = (labels.count > 0 ? labels[0] : nil);
+                    rowTitle = label.text;
+                }
             }
-            
             if (rowTitle) {
                 [dataToSelect addObject: rowTitle];
             } else {
@@ -608,11 +727,10 @@
             }
         }
     }
-
-    [self selectPickerValue:dataToSelect pickerType:pickerType];
+    [self selectPickerValue:dataToSelect fromPicker:pickerView pickerType:pickerType withSearchOrder:searchOrder];
 }
 
-- (void)selectPickerValue:(NSArray *)pickerColumnValues pickerType:(KIFPickerType)pickerType
+- (void)selectPickerValue:(NSArray *)pickerColumnValues fromPicker:(UIPickerView *)picker pickerType:(KIFPickerType)pickerType withSearchOrder:(KIFPickerSearchOrder)searchOrder
 {
     [self runBlock:^KIFTestStepResult(NSError **error) {
         NSInteger columnCount = [pickerColumnValues count];
@@ -621,23 +739,50 @@
             [found_values addObject:[NSNumber numberWithBool:NO]];
         }
         // Find the picker view
-        UIPickerView *pickerView = nil;
-        switch (pickerType)
-        {
-            case KIFUIDatePicker:
-                pickerView = [[[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
-                KIFTestCondition(pickerView, error, @"No picker view is present");
-                break;
-            case KIFUIPickerView:
-                pickerView = [[[[UIApplication sharedApplication] pickerViewWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+        UIPickerView *pickerView = picker;
+        if (pickerView == nil) {
+            switch (pickerType)
+            {
+                case KIFUIDatePicker:
+                {
+                    pickerView = [[[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+                    KIFTestCondition(pickerView, error, @"No picker view is present");
+                    break;
+                }
+                case KIFUIPickerView:
+                {
+                    pickerView = [[[[UIApplication sharedApplication] pickerViewWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+                }
+            }
         }
         
         NSInteger componentCount = [pickerView.dataSource numberOfComponentsInPickerView:pickerView];
-        KIFTestCondition(componentCount == columnCount, error, @"The UIDatePicker does not have the expected column count.");
+        KIFTestCondition(componentCount == columnCount, error, @"The Picker does not have the expected column count.");
         
         for (NSInteger componentIndex = 0; componentIndex < componentCount; componentIndex++) {
+
+            // Set search order
+            NSInteger firstIndex;
             NSInteger rowCount = [pickerView.dataSource pickerView:pickerView numberOfRowsInComponent:componentIndex];
-            for (NSInteger rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            NSInteger indexProgress = (searchOrder == KIFPickerSearchBackwardFromCurrentValue ||
+                                       searchOrder == KIFPickerSearchBackwardFromEnd) ? -1 : 1;
+            switch (searchOrder) {
+                case KIFPickerSearchForwardFromCurrentValue:
+                case KIFPickerSearchBackwardFromCurrentValue:
+                    firstIndex = [pickerView selectedRowInComponent:componentIndex];
+                    break;
+                case KIFPickerSearchBackwardFromEnd:
+                    firstIndex = rowCount - 1;
+                    break;
+                default:
+                    firstIndex = 0;
+                    break;
+            }
+            
+            //Fix issue with AM:PM
+            if (rowCount == 2) { indexProgress = 1; firstIndex = 0; }
+
+            for (NSInteger rowIndex = firstIndex; rowIndex < rowCount && rowIndex >= 0; rowIndex += indexProgress) {
                 NSString *rowTitle = nil;
                 if ([pickerView.delegate respondsToSelector:@selector(pickerView:titleForRow:forComponent:)]) {
                     rowTitle = [pickerView.delegate pickerView:pickerView titleForRow:rowIndex forComponent:componentIndex];
@@ -662,8 +807,10 @@
                     break;
                 }
                 else if ([rowTitle isEqual:pickerColumnValues[componentIndex]]) {
-                    [pickerView selectRow:rowIndex inComponent:componentIndex animated:false];
-                    KIFRunLoopRunInModeRelativeToAnimationSpeed(kCFRunLoopDefaultMode, 1.0f, false);
+                    [pickerView selectRow:rowIndex inComponent:componentIndex animated:NO];
+                    KIFRunLoopRunInModeRelativeToAnimationSpeed(kCFRunLoopDefaultMode, 1.0f, NO);
+                    // Even though selectRow says it's not animated - it really is. We need to wait for them to finish before continuing.
+                    [tester waitForAnimationsToFinish];
                     
                     // Tap in the middle of the picker view to select the item
                     [pickerView tap];
@@ -732,7 +879,7 @@
     }
 
     NSLog(@"Faking turning switch %@", switchIsOn ? @"ON" : @"OFF");
-    [switchView setOn:switchIsOn animated:YES];
+    [switchView setOn:switchIsOn animated:[[self class] testActorAnimationsEnabled]];
     [switchView sendActionsForControlEvents:UIControlEventValueChanged];
     [self waitForTimeInterval:0.5 relativeToAnimationSpeed:YES];
 
@@ -900,6 +1047,11 @@
 - (BOOL)acknowledgeSystemAlert
 {
     return [UIAutomationHelper acknowledgeSystemAlert];
+}
+
+- (BOOL)acknowledgeSystemAlertWithIndex:(NSUInteger)index
+{
+    return [UIAutomationHelper acknowledgeSystemAlertWithIndex: index];
 }
 
 #endif
@@ -1097,7 +1249,7 @@
     __block UITableViewCell *cell = nil;
     __block CGFloat lastYOffset = CGFLOAT_MAX;
     [self runBlock:^KIFTestStepResult(NSError **error) {
-        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:position animated:YES];
+        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:position animated:[[self class] testActorAnimationsEnabled]];
         cell = [tableView cellForRowAtIndexPath:indexPath];
         KIFTestWaitCondition(!!cell, error, @"Table view cell at index path %@ not found", indexPath);
         
@@ -1154,7 +1306,7 @@
 
     [collectionView scrollToItemAtIndexPath:indexPath
                            atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally | UICollectionViewScrollPositionCenteredVertically
-                                   animated:YES];
+                                   animated:[[self class] testActorAnimationsEnabled]];
 
     // waitForAnimationsToFinish doesn't allow collection view to settle when animations are sped up
     // So use waitForTimeInterval instead
@@ -1296,6 +1448,16 @@
         case KIFSwipeDirectionDown:
             return CGPointMake(kKIFMinorSwipeDisplacement, UIScreen.mainScreen.majorSwipeDisplacement);
     }
+}
+
++ (BOOL)testActorAnimationsEnabled;
+{
+    return KIFUITestActorAnimationsEnabled;
+}
+
++ (void)setTestActorAnimationsEnabled:(BOOL)animationsEnabled;
+{
+    KIFUITestActorAnimationsEnabled = animationsEnabled;
 }
 
 @end

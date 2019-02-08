@@ -1,12 +1,13 @@
 source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+platform :ios, '9.0'
 
-target 'KIF-Kiwi', :exclusive => true do
+target 'KIF-Kiwi' do
     # even this target does not depend on any pods
     # we insert this dependency to workaround this cocoapods issue:  https://github.com/CocoaPods/CocoaPods/issues/2516
     pod "KIF-Kiwi", :path => "../KIF-Kiwi.podspec"
 end
 
-target 'Tests', :exclusive => true do
-  pod "KIF-Kiwi", :path => "../KIF-Kiwi.podspec"
-  pod 'FBSnapshotTestCase'
+target 'Tests' do
+    pod "KIF-Kiwi", :path => "../KIF-Kiwi.podspec"
 end

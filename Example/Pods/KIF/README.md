@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/kif-framework/KIF.svg?branch=master)](https://travis-ci.org/kif-framework/KIF) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPod Version](https://img.shields.io/cocoapods/v/KIF.svg?style=flat)](https://cocoapods.org)
 
+**IMPORTANT! Even though KIF is used to test your UI, you need to add it to your Unit Test target, _not_ your UI Test target. The magic of KIF is that it allows you to drive your UI from your unit tests and reap all the advantages of testing in-process.**
+
 KIF iOS Integration Testing Framework
 =====================================
 
@@ -18,8 +20,8 @@ All of the tests for KIF are written in Objective-C. This allows for maximum int
 #### Easy Configuration
 KIF integrates directly into your Xcode project, so there's no need to run an additional web server or install any additional packages.
 
-#### Wide OS coverage
-KIF's test suite has been run against iOS 8.1 and above, though lower versions will likely work.
+#### Wide OS and Xcode coverage
+KIF's test suite is being run against iOS 8+ and Xcode 7+. Lower versions will likely still work, but your mileage may vary. We do our best to retain backwards compatibility as much as possible.
 
 #### Test Like a User
 KIF attempts to imitate actual user input. Automation is done using tap events wherever possible.
@@ -51,7 +53,7 @@ target 'Your Apps' do
 end
 
 target 'Acceptance Tests' do
-  pod 'KIF', '~> 3.0', :configurations => ['Debug']
+  pod 'KIF', :configurations => ['Debug']
 end
 ```
 
@@ -64,7 +66,7 @@ To install KIF, you'll need to link the libKIF static library directly into your
 
 We'll be using a simple project as an example, and you can find it in `Documentation/Examples/Testable Swift` in this repository.
 
-![Simple App](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Simple App.png)
+![Simple App](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Simple%20App.png)
 
 
 ### Add KIF to your project files
@@ -81,7 +83,7 @@ If you're not using Git, simply download the source and copy it into the `./Fram
 ### Add KIF to Your Workspace
 Let your project know about KIF by adding the KIF project into a workspace along with your main project. Find the `KIF.xcodeproj` file in Finder and drag it into the Project Navigator (⌘1).
 
-![Added KIF to the project](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Added KIF to Project.png)
+![Added KIF to the project](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Added%20KIF%20to%20Project.png)
 
 
 ### Create a Testing Target
@@ -96,15 +98,26 @@ Now that you have a target for your tests, add the tests to that target. With th
 
 KIF requires the IOKit.framework, but it is not located with the other system frameworks. To link to it, add "-framework IOKit" to the "Other Linker Flags" build setting.
 
-![Add libKIF library screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add Library.png)
+![Add libKIF library screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add%20Library.png)
 
-![Add libKIF library screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add Library Sheet.png)
+![Add libKIF library screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add%20Library%20Sheet.png)
 
 KIF takes advantage of Objective C's ability to add categories on an object, but this isn't enabled for static libraries by default. To enable this, add the `-ObjC` flag to the "Other Linker Flags" build setting on your test bundle target as shown below.
 
-![Add category linker flags screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add Category Linker Flags.png)
+![Add category linker flags screen shot](https://github.com/kif-framework/KIF/raw/master/Documentation/Images/Add%20Category%20Linker%20Flags.png)
 
 Read **Final Test Target Configurations** below for the final details on getting your tests to run.
+
+Installing Accessibility Identifier Tests
+-----------------------------------------
+
+Normally you identify a UI element via its accessibility label so that KIF simulates the interactions of a real user as closely as possible. In some cases, however, you may have to use accessibility identifiers, which are not exposed to users. If using CocoaPods, install the additional identifier-based KIF tests via the Identifier CocoaPods subspec:
+
+```
+pod 'KIF/IdentifierTests'
+```
+
+If not using CocoaPods, the identifier-based KIF tests can be added by including "KIFUITestActor-IdentifierTests.h".
 
 Final Test Target Configurations
 --------------------------------
@@ -113,7 +126,7 @@ You need your tests to run hosted in your application. **Xcode does this for you
 
 First add your application by selecting "Build Phases", expanding the "Target Dependencies" section, clicking on the "+" button, and in the new sheet that appears selecting your application target and clicking "Add".
 
-Next, configure your bundle loader.  In "Build Settings", expand "Linking" and edit "Bundle Loader" to be `$(BUILT_PRODUCTS_DIR)/MyApplication.app/MyApplication` where *MyApplication* is the name of your app.  Expand the "Testing" section and edit "Test Host" to be `$(BUNDLE_LOADER)`. Also make sure that "Wrapper Extension" is set to "xctest".
+Next, configure your bundle loader. In "Build Settings", expand "Linking" and edit "Bundle Loader" to be "$(TEST_HOST)". Expand the "Testing" section and edit "Test Host" to be "$(BUILT_PRODUCTS_DIR)/MyApplication.app/MyApplication" where "MyApplication" is the name of your app. Also make sure that "Wrapper Extension" is set to "xctest".
 
 The last step is to configure your unit tests to run when you trigger a test (⌘U).  Click on your scheme name and select "Edit Scheme…".  Click on "Test" in the sidebar followed by the "+" in the bottom left corner.  Select your testing target and click "OK".
 
@@ -201,12 +214,12 @@ Most of the tester actions in the test are already defined by the KIF framework,
 @end
 ```
 
-Everything should now be configured. When you run the integration tests using the test button, ⌘U, or the Xcode 5 Test Navigator (⌘5).
+Everything should now be configured. When you run the integration tests using the test button, ⌘U, or the Xcode Test Navigator (⌘5).
 
 Use with other testing frameworks
 ---------------------------------
 
-`KIFTestCase` is not necessary for running KIF tests.  Tests can run directly in `XCTestCase` or any subclass.  The basic requirement is that when you call `tester` or `system`, `self` must be an instance of `XCTestCase`.
+`KIFTestCase` is not necessary for running KIF tests.  Tests can run directly in `XCTestCase` or any subclass.  The basic requirement is that when you call `tester` or `system`, `self` must be an instance of `XCTestCase` and you must call `KIFEnableAccessibility` in `setUp`.
 
 For example, the following [Specta](https://github.com/specta/specta) test works without any changes to KIF or Specta:
 
@@ -245,8 +258,6 @@ If you want to write your test cases in Swift, you'll need to keep two things in
 2. The `tester` and `system` keywords are C preprocessor macros which aren't available in Swift. You can easily write a small extension to `XCTestCase` or any other class to access them:
 
 ```swift
-import KIF
- 
 extension XCTestCase {
     func tester(file : String = #file, _ line : Int = #line) -> KIFUITestActor {
         return KIFUITestActor(inFile: file, atLine: line, delegate: self)
@@ -267,6 +278,8 @@ extension KIFTestActor {
     }
 }
 ```
+
+See Documentation/Examples/Testable Swift for sample code.
 
 
 Troubleshooting
@@ -294,7 +307,7 @@ or if you get another "unrecognized selector" error inside the KIF code, make su
 Continuous Integration
 ----------------------
 
-A continuous integration (CI) process is highly recommended and is extremely useful in ensuring that your application stays functional. The easiest way to do this will be with Xcode 5, either using Bots, or Jenkins or another tool that uses xcodebuild.  For tools using xcodebuild, review the manpage for instructions on using test destinations.
+A continuous integration (CI) process is highly recommended and is extremely useful in ensuring that your application stays functional. The easiest way to do this will be with Xcode, either using Bots, or Jenkins or another tool that uses xcodebuild.  For tools using xcodebuild, review the manpage for instructions on using test destinations.
 
 Contributing
 ------------

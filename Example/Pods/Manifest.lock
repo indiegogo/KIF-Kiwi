@@ -1,25 +1,29 @@
 PODS:
-  - FBSnapshotTestCase (1.2)
-  - KIF (3.5.1):
-    - KIF/Core (= 3.5.1)
-  - KIF-Kiwi (0.2.5):
+  - KIF (3.7.4):
+    - KIF/Core (= 3.7.4)
+  - KIF-Kiwi (0.2.6):
     - KIF (~> 3.0)
-    - Kiwi (~> 2.0)
-  - KIF/Core (3.5.1)
-  - Kiwi (2.4.0)
+    - Kiwi (~> 3.0)
+  - KIF/Core (3.7.4)
+  - Kiwi (3.0.0)
 
 DEPENDENCIES:
-  - FBSnapshotTestCase
   - KIF-Kiwi (from `../KIF-Kiwi.podspec`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - KIF
+    - Kiwi
 
 EXTERNAL SOURCES:
   KIF-Kiwi:
     :path: "../KIF-Kiwi.podspec"
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: cea4d098941d86e023034d6cf0ad95f9de4f3f1a
-  KIF: 082eb65279e51c3092923802849eb796a04982ab
-  KIF-Kiwi: 2720db195d25d2378fd077afa563a6f97ff943e3
-  Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
+  KIF: f3d01c109ee9d1cfe6b0f2bb2aa278e807e971e2
+  KIF-Kiwi: 33ed2440eae8d2d0ee34767a532d2e0226ac1485
+  Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: e50cedbf7cfb69d9251bc5da21cd72d9b9c7a3ca
+
+COCOAPODS: 1.5.2

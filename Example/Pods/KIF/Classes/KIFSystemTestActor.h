@@ -10,7 +10,23 @@
 #import "KIFTestActor.h"
 #import <UIKit/UIKit.h>
 
+
+#define systemTester KIFActorWithClass(KIFSystemTestActor)
+
+// The symbol `system` collides with the cstdlib for compiling C++. Leaving it available for compatibility reasons.
+// This will be removed with the next major KIF release, please start using `systemTester` instead.
+#ifndef __cplusplus
+
+#if DEPRECATE_KIF_SYSTEM
+// Add `-DDEPRECATE_KIF_SYSTEM=1` to OTHER_CFLAGS if you'd like to prevent usage of the `system` macro.
+@class KIFSystemTestActor;
+KIFSystemTestActor *_KIF_system() __attribute__((deprecated("Use of `system` has been deprecated; Use `systemTester` instead.")));
+#define system _KIF_system()
+#else
 #define system KIFActorWithClass(KIFSystemTestActor)
+#endif
+
+#endif
 
 @interface KIFSystemTestActor : KIFTestActor
 
@@ -32,7 +48,7 @@
  @param block The block of code to be executed.
  @return The detected NSNotification.
  */
-- (NSNotification *)waitForNotificationName:(NSString *)name object:(id)object whileExecutingBlock:(void(^)())block;
+- (NSNotification *)waitForNotificationName:(NSString *)name object:(id)object whileExecutingBlock:(void(^)(void))block;
 
 /*!
  @abstract Simulates a memory warning.
@@ -52,14 +68,14 @@
  @param block The block of code to be executed.
  @param returnValue The value to return from @c +[UIApplication openURL:].
  */
-- (void)waitForApplicationToOpenURL:(NSString *)URLString whileExecutingBlock:(void(^)())block returning:(BOOL)returnValue;
+- (void)waitForApplicationToOpenURL:(NSString *)URLString whileExecutingBlock:(void(^)(void))block returning:(BOOL)returnValue;
 
 /*!
  @abstract Waits for the application to request any URL while executing a block.
  @param block The block of code to be executed.
  @param returnValue The value to return from @c +[UIApplication openURL:].
  */
-- (void)waitForApplicationToOpenAnyURLWhileExecutingBlock:(void(^)())block returning:(BOOL)returnValue;
+- (void)waitForApplicationToOpenAnyURLWhileExecutingBlock:(void(^)(void))block returning:(BOOL)returnValue;
 
 /*!
  @abstract Waits for the application to request any URL with the given URL Scheme while executing a block.
@@ -67,7 +83,7 @@
  @param block The block of code to be executed.
  @param returnValue The value to return from @c +[UIApplication openURL:].
  */
-- (void)waitForApplicationToOpenURLWithScheme:(NSString *)URLScheme whileExecutingBlock:(void (^)())block returning:(BOOL)returnValue;
+- (void)waitForApplicationToOpenURLWithScheme:(NSString *)URLScheme whileExecutingBlock:(void (^)(void))block returning:(BOOL)returnValue;
 
 /*!
  @abstract Captured a screenshot of the current screen and writes it to disk with an optional description.

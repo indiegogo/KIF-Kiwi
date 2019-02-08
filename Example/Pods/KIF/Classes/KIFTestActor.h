@@ -92,8 +92,11 @@ typedef void (^KIFTestCompletionBlock)(KIFTestStepResult result, NSError *error)
 @property (nonatomic) NSTimeInterval executionBlockTimeout;
 @property (nonatomic) NSTimeInterval animationWaitingTimeout;
 @property (nonatomic) NSTimeInterval animationStabilizationTimeout;
+@property (nonatomic) NSTimeInterval mainThreadDispatchStabilizationTimeout;
 
 - (instancetype)usingTimeout:(NSTimeInterval)executionBlockTimeout;
+- (instancetype)usingAnimationWaitingTimeout:(NSTimeInterval)animationWaitingTimeout;
+- (instancetype)usingAnimationStabilizationTimeout:(NSTimeInterval)animationStabilizationTimeout;
 
 - (void)runBlock:(KIFTestExecutionBlock)executionBlock complete:(KIFTestCompletionBlock)completionBlock timeout:(NSTimeInterval)timeout;
 - (void)runBlock:(KIFTestExecutionBlock)executionBlock complete:(KIFTestCompletionBlock)completionBlock;
@@ -130,6 +133,19 @@ typedef void (^KIFTestCompletionBlock)(KIFTestStepResult result, NSError *error)
  @abstract Sets the amount of time to wait before starting to check for animations
  */
 + (void)setDefaultAnimationStabilizationTimeout:(NSTimeInterval)newDefaultAnimationStabilizationTimeout;
+
+/*!
+ @method defaultMainThreadDispatchStabilizationTimeout
+ @abstract The default amount of time to wait for the main thread to process animations.
+ @discussion To change the default value of the timeout property, call +setDefaultMainThreadDispatchStabilizationTimeout: with a different value.
+ */
++ (NSTimeInterval)defaultMainThreadDispatchStabilizationTimeout;
+
+/*!
+ @method setDefaultMainThreadDispatchStabilizationTimeout:
+ @abstract Sets the amount of time to wait for the main thread to process animations.
+ */
++ (void)setDefaultMainThreadDispatchStabilizationTimeout:(NSTimeInterval)newDefaultMainThreadDispatchStabilizationTimeout;
 
 /*!
  @method defaultTimeout
