@@ -1,17 +1,17 @@
 PODS:
-  - KIF (3.7.4):
-    - KIF/Core (= 3.7.4)
+  - KIF (3.7.8):
+    - KIF/Core (= 3.7.8)
   - KIF-Kiwi (0.2.6):
     - KIF (~> 3.0)
     - Kiwi (~> 3.0)
-  - KIF/Core (3.7.4)
+  - KIF/Core (3.7.8)
   - Kiwi (3.0.0)
 
 DEPENDENCIES:
   - KIF-Kiwi (from `../KIF-Kiwi.podspec`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - KIF
     - Kiwi
 
@@ -20,10 +20,10 @@ EXTERNAL SOURCES:
     :path: "../KIF-Kiwi.podspec"
 
 SPEC CHECKSUMS:
-  KIF: f3d01c109ee9d1cfe6b0f2bb2aa278e807e971e2
-  KIF-Kiwi: 33ed2440eae8d2d0ee34767a532d2e0226ac1485
+  KIF: 52e1af1a78cf6fe4ec6777b14776f3dd2eccc32e
+  KIF-Kiwi: 4613c6b414fc900153073c0754ad810b6f119d23
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
 
-PODFILE CHECKSUM: e50cedbf7cfb69d9251bc5da21cd72d9b9c7a3ca
+PODFILE CHECKSUM: ce84315524dd0e7c0ecbedb9a88139411f038594
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.8.4
