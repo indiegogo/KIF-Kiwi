@@ -181,7 +181,6 @@
 				61814AF78E4178ACD8FC07DA /* Pods-Tests.debug.xcconfig */,
 				AF856895B835D93216F693CB /* Pods-Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -232,7 +231,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = IG;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Indiegogo Pair";
 				TargetAttributes = {
 					6003F5AD195388D20070C39A = {
@@ -242,10 +241,9 @@
 			};
 			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "KIF-Kiwi" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -389,6 +387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -442,6 +441,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
