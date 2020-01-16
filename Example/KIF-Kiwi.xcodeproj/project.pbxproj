@@ -59,8 +59,8 @@
 		8ABB4D4089355611F81AC542 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF4EF3953A528A569E61A0B /* Pods_KIF_Kiwi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KIF_Kiwi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A27EE20F198B0C2100B0535A /* TestableSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableSpec.m; sourceTree = "<group>"; };
-		A2CB5AD419D34989005949BA /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
-		A2CB5AD519D34989005949BA /* Gemfile.lock */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile.lock; sourceTree = "<group>"; };
+		A2CB5AD419D34989005949BA /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile; path = ../Gemfile; sourceTree = "<group>"; };
+		A2CB5AD519D34989005949BA /* Gemfile.lock */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile.lock; path = ../Gemfile.lock; sourceTree = "<group>"; };
 		B6F08C7D54CF4B43DEA883DD /* Pods-KIF-Kiwi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KIF-Kiwi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KIF-Kiwi/Pods-KIF-Kiwi.debug.xcconfig"; sourceTree = "<group>"; };
 		CB41983A39114962A6800C3B /* KIF-Kiwi.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = "KIF-Kiwi.podspec"; path = "../KIF-Kiwi.podspec"; sourceTree = "<group>"; };
 		E2DDA7A576C50A140D5EDF14 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -254,6 +254,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
